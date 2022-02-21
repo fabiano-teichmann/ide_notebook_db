@@ -1,10 +1,15 @@
+# Databricks notebook source
 
 import os
 
 import investpy
 
-from example_notebooks.save_share.save_share import save_share
-from example_notebooks.utils.logger import logger
+# COMMAND ---------- 
+# MAGIC %run ./save_share/save_share
+# COMMAND ---------- 
+# COMMAND ---------- 
+# MAGIC %run ./utils/logger
+# COMMAND ---------- 
 
 
 def get_list_share(country: str):
@@ -16,4 +21,5 @@ if __name__ == "__main__":
     logger.info("Start get list share")
     get_list_share("brazil")
     logger.info("Finished")
+# COMMAND ---------- 
 # COMMAND ---------- 
