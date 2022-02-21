@@ -1,8 +1,11 @@
+# Databricks notebook source
 
 import json
 import datetime
 
-from example_notebooks.utils.logger import logger
+# COMMAND ---------- 
+# MAGIC %run ./example_notebooks/utils/logger
+# COMMAND ---------- 
 
 
 def save_share(list_share: str, country: str, path: str):
@@ -14,3 +17,4 @@ def save_share(list_share: str, country: str, path: str):
     with open(f"{path}/share_{country}.json", mode="w") as f:
         f.write(json.dumps(data))
 
+# COMMAND ---------- 
