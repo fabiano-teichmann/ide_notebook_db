@@ -25,6 +25,6 @@ def to_python(file: str):
 
 
 if __name__ == '__main__':
+    # to_notebook("example_notebooks/save_share/save_share.py")
     fire.Fire()
-
 

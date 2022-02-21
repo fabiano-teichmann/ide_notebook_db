@@ -1,10 +1,9 @@
 # Databricks notebook source
-
 import json
 import datetime
 
 # COMMAND ---------- 
-# MAGIC %run ./example_notebooks/utils/logger
+# MAGIC %run ./utils/logger
 # COMMAND ---------- 
 
 

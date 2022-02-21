@@ -12,27 +12,20 @@ class PythonFileToNotebook(FileHandler):
 
     def transform(self):
         if "# Databricks notebook source" not in self.lines[0]:
-            return self._convert_to_notebook_databricks()
+            data = self._convert_to_notebook_databricks()
         else:
             data = []
             for line in self.lines:
                 data.append(self._convert_import_to_magic_run(line=line))
-            return self._save_file(data)
+        return self._save_file(data)
 
-    def _convert_to_notebook_databricks(self):
-        command = "# COMMAND ---------- \n"
+    def _convert_to_notebook_databricks(self) -> list:
         data = ["# Databricks notebook source\n"]
         for line in self.lines:
-            if "import" in line and not self._lib_is_built_in_or_third(line):
-                data.append(command)
-                data.append(self._convert_import_to_magic_run(line=line))
-                data.append(command)
-            else:
+            data.append(self._convert_import_to_magic_run(line=line))
 
-                data.append(line)
-
-        data.append(command)
-        return self._save_file(data)
+        data.append("# COMMAND ---------- \n")
+        return data
 
     def _convert_import_to_magic_run(self, line: str) -> str:
         """
@@ -40,22 +33,26 @@ class PythonFileToNotebook(FileHandler):
         :param line: line file
         :return: line convert import to magic run databricks
         """
-
-        if "import" in line and not self._lib_is_built_in_or_third(line):
-            magic_run = "# MAGIC %run "
-            line = line.replace("from", "")
-            line = line.split("import")[0]
-            line = line.replace(" ", "")
-            line = line.split(".")
-            local = line.index(self.root_path)
-            if local == 0:
-                line = magic_run + "./" + "/".join(x for x in line)
+        command = "# COMMAND ---------- \n"
+        if "import" in line or "from" in line:
+            if not self._lib_is_built_in_or_third(line):
+                magic_run = "# MAGIC %run "
+                line = line.replace("from", "")
+                line = line.split("import")[0]
+                line = line.replace(" ", "")
+                line = line.split(".")
+                local = line.index(self.root_path)
+                del line[line.index(self.root_path)]
+                if local == 0:
+                    line = magic_run + "./" + "/".join(x for x in line)
+                else:
+                    line = magic_run + "../" * local + "/".join(x for x in line)
             else:
-                line = magic_run + "../" * local + "/".join(x for x in line)
+                return line
 
             if "\n" not in line:
                 line += "\n"
-            return line
+            return command + line + command
         return line
 
     @staticmethod

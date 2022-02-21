@@ -1,14 +1,10 @@
-# Databricks notebook source
+
 import os
 
 import investpy
 
-# COMMAND ---------- 
-# MAGIC %run ./example_notebooks/save_share/save_share
-# COMMAND ---------- 
-# COMMAND ---------- 
-# MAGIC %run ./example_notebooks/utils/logger
-# COMMAND ---------- 
+from example_notebooks.save_share.save_share import save_share
+from example_notebooks.utils.logger import logger
 
 
 def get_list_share(country: str):
