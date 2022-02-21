@@ -3,5 +3,4 @@ investpy
 httpx
 pre-commit
 GitPython
-click
 fire
