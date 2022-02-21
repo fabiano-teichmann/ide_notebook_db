@@ -32,6 +32,4 @@ def main():
 
 
 if __name__ == '__main__':
-    IDENotebook().import_to_magic_run("example_notebooks/main.py")
-    IDENotebook().magic_run_to_import("example_notebooks/main.py")
-    # main()
+    main()

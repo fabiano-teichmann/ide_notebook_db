@@ -1,4 +1,5 @@
 import pkg_resources
+import importlib
 
 from ide_notebook_db.FileHandler import FileHandler
 
@@ -39,10 +40,13 @@ class ImportToMagicRun(FileHandler):
 
     @staticmethod
     def _lib_is_built_in_or_third(line: str) -> bool:
-        lib = line.split(" ")[1].replace("\n", "").split(".")[0]
-        dists = [d.key for d in pkg_resources.working_set]
-        return True if lib in dists else False
-
-
+        line = line.split(" ")[1].replace("\n", "").split(".")[0]
+        try:
+            lib = str(importlib.import_module(line)).split(" ")[-1]
+            if "/python3" in lib or "/python2" in lib:
+                return True
+            return False
+        except ModuleNotFoundError:
+            raise ModuleNotFoundError(f"Not found module {line}")
 
 

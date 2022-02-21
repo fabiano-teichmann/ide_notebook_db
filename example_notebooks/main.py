@@ -1,8 +1,9 @@
+import os
 
 import investpy
 
-from example_notebooks.save_share import save_share
-from example_notebooks.utils.logger import logger
+# MAGIC %run example_notebooks.save_share
+# MAGIC %run example_notebooks.utils.logger
 
 
 def get_list_share(country: str):
