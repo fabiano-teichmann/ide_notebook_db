@@ -4,20 +4,24 @@ import importlib
 from ide_notebook_db.FileHandler import FileHandler
 
 
-class ImportToMagicRun(FileHandler):
+class PythonFileToNotebook(FileHandler):
     def __init__(self, path: str):
         self.path = path
         super().__init__(path)
         self.lines = self._read_file()
 
     def transform(self):
-        data = []
+        command = "# COMMAND ---------- \n"
+        data = ["# Databricks notebook source\n"]
         for line in self.lines:
             if "import" in line and not self._lib_is_built_in_or_third(line):
-
+                data.append(command)
                 data.append(self._convert_import_to_magic_run(line=line))
+                data.append(command)
             else:
                 data.append(line)
+
+        data.append(command)
         return self._save_file(data)
 
     @staticmethod

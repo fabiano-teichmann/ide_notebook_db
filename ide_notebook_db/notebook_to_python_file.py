@@ -1,7 +1,7 @@
 from ide_notebook_db.FileHandler import FileHandler
 
 
-class MagicRunToImport(FileHandler):
+class Notebook_to_python_file(FileHandler):
     def __init__(self, path: str):
         self.path = path
         super().__init__(path)
