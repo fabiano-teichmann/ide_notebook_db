@@ -1,3 +1,4 @@
+# Databricks notebook source
 import json
 import datetime
 
@@ -9,3 +10,4 @@ def save_share(list_share: str, country: str, path: str):
 
     with open(f"{path}/share_{country}.json", mode="w") as f:
         f.write(json.dumps(data))
+# COMMAND ---------- 

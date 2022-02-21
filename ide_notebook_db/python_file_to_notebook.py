@@ -19,6 +19,8 @@ class PythonFileToNotebook(FileHandler):
                 data.append(self._convert_import_to_magic_run(line=line))
                 data.append(command)
             else:
+                if data[-1] != command:
+                    data.append(command)
                 data.append(line)
 
         data.append(command)
