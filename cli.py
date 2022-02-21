@@ -5,31 +5,26 @@ from ide_notebook_db.list_changed_files import list_changed_files
 from ide_notebook_db.notebook_to_python_file import Notebook_to_python_file
 
 
-class IDENotebook:
+def to_notebook(file: str):
+    if file:
+        return PythonFileToNotebook(file).transform()
 
-    @staticmethod
-    def import_to_magic_run(file: str):
-        if file:
-            return PythonFileToNotebook(file).transform()
-
-        files = list_changed_files()
-        for file in files:
-            PythonFileToNotebook(file).transform()
-
-    @staticmethod
-    def magic_run_to_import(file: str):
-        if file:
-            print(file)
-            return Notebook_to_python_file(file).transform()
-
-        files = list_changed_files()
-        for file in files:
-            Notebook_to_python_file(file).transform()
+    files = list_changed_files()
+    for file in files:
+        PythonFileToNotebook(file).transform()
 
 
-def main():
-    fire.Fire(IDENotebook)
+def to_python(file: str):
+    if file:
+        print(file)
+        return Notebook_to_python_file(file).transform()
+
+    files = list_changed_files()
+    for file in files:
+        Notebook_to_python_file(file).transform()
 
 
 if __name__ == '__main__':
-    main()
+    fire.Fire()
+
+
