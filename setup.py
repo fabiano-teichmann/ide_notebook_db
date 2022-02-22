@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(name='ide_notebook_db',
       version='1.0.0',
-      url="https://dev.azure.com/pagueveloz/PlataformaDeDados/_git/data-azure-purview-pv",
+      url="https://github.com/fabiano-teichmann/ide_notebook_db",
       license="MIT",
       classifiers=[
           "Programming Language :: Python :: 3",
@@ -13,4 +13,4 @@ setup(name='ide_notebook_db',
       description='Convert imports to magic run databrics, and convert magic run databricks to import',
       packages=find_packages(exclude='example_notebooks'),
       long_description=open('README.md').read(),
-      install_requires=['GitPython', 'fire'])
+      install_requires=['GitPython', 'click'])

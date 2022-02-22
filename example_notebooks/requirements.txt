@@ -1,0 +1,6 @@
+pytest
+investpy
+httpx
+pre-commit
+GitPython
+fire

@@ -41,8 +41,11 @@ class PythonFileToNotebook(FileHandler):
                 line = line.split("import")[0]
                 line = line.replace(" ", "")
                 line = line.split(".")
-                local = line.index(self.root_path)
-                del line[line.index(self.root_path)]
+                try:
+                    local = line.index(self.root_path)
+                    del line[line.index(self.root_path)]
+                except ValueError:
+                    local = 0
                 if local == 0:
                     line = magic_run + "./" + "/".join(x for x in line)
                 else:
