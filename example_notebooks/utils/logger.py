@@ -1,4 +1,8 @@
 # Databricks notebook source
+# COMMAND ----------
 import logging
+# COMMAND ----------
 
-logger = logging.getLogger()# COMMAND ---------- 
+# COMMAND ----------
+logger = logging.getLogger()
+# COMMAND ----------
