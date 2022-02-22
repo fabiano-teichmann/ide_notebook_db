@@ -1,23 +1,27 @@
 import importlib
 
-from ide_notebook_db.FileHandler import FileHandler
+import click
 
 
-class PythonFileToNotebook(FileHandler):
-    def __init__(self, path: str):
+class PythonFileToNotebook:
+    def __init__(self, path: str, lines: list):
         self.path = path
-        self.root_path = self.path.split("/")[0]
-        super().__init__(path)
-        self.lines = self._read_file()
+        self.lines = lines
 
-    def transform(self):
+    def transform(self) -> list:
+        """
+        if file is notebook find local lib to convert in magic run databricks, else add comments to transform in
+        notebook accepted by databricks.
+        :return list content data to save
+
+        """
         if "# Databricks notebook source" not in self.lines[0]:
             data = self._convert_to_notebook_databricks()
         else:
             data = []
             for line in self.lines:
                 data.append(self._convert_import_to_magic_run(line=line))
-        return self._save_file(data)
+        return data
 
     def _convert_to_notebook_databricks(self) -> list:
         data = ["# Databricks notebook source\n"]
@@ -27,6 +31,19 @@ class PythonFileToNotebook(FileHandler):
         data.append("# COMMAND ---------- \n")
         return data
 
+    def _breadcrumb_magic_run(self, line: str) -> str:
+        line = line.split(" ")[1].split(".")
+        level_file = len(self.path.split("/"))
+        level_import = len(line)
+        magic_run = "# MAGIC %run "
+        if level_import == 1 or level_file == 1:
+            breadcrumb = "./"
+        else:
+            breadcrumb = "../" * level_import
+
+        line = magic_run + breadcrumb + "/".join(x for x in line)
+        return line
+
     def _convert_import_to_magic_run(self, line: str) -> str:
         """
 
@@ -35,24 +52,10 @@ class PythonFileToNotebook(FileHandler):
         """
         command = "# COMMAND ---------- \n"
         if "import" in line or "from" in line:
-            if not self._lib_is_built_in_or_third(line):
-                magic_run = "# MAGIC %run "
-                line = line.replace("from", "")
-                line = line.split("import")[0]
-                line = line.replace(" ", "")
-                line = line.split(".")
-                try:
-                    local = line.index(self.root_path)
-                    del line[line.index(self.root_path)]
-                except ValueError:
-                    local = 0
-                if local == 0:
-                    line = magic_run + "./" + "/".join(x for x in line)
-                else:
-                    line = magic_run + "../" * local + "/".join(x for x in line)
-            else:
+            if self._lib_is_built_in_or_third(line):
                 return line
 
+            line = self._breadcrumb_magic_run(line)
             if "\n" not in line:
                 line += "\n"
             return command + line + command
@@ -67,6 +70,7 @@ class PythonFileToNotebook(FileHandler):
                 return True
             return False
         except ModuleNotFoundError:
-            raise ModuleNotFoundError(f"Not found module {line}")
+            click.echo('⚠️ \033[31m' + 'Warming: ' + '\033[30m' + f"Not found module {line}")
+            return False
 
 
